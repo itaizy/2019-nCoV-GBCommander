@@ -126,15 +126,9 @@ def world_count():
         sql = "SELECT `nowConfirm`, `nowConfirmAdd`, `confirm`, `confirmAdd`, `heal`, `healAdd`, `dead`, `deadAdd` FROM ncov_data_tencent ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results = conn.fetchall()
-        sql = "SELECT SUM(`confirmedCount`), SUM(`confirmedIncr`) FROM ncov_data WHERE (`date` = (SELECT MAX(`date`) FROM ncov_data WHERE `name` LIKE '%境外输入%') AND `name` LIKE '%境外输入%');"
+        sql = "SELECT `suspectedCount`, `suspectedIncr`, `currentConfirmedCount`, `currentConfirmedIncr` FROM ncov_data_global ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results2 = conn.fetchall()
-        sql = "SELECT SUM(`confirmedCount`) FROM ncov_data WHERE `name` LIKE '%境外输入%';"
-        conn.execute(sql)
-        results3 = conn.fetchall()
-        sql = "SELECT `confirmedCount`, `confirmedIncr` FROM ncov_data WHERE name='中国' ORDER BY `date` DESC LIMIT 1;"
-        conn.execute(sql)
-        results4 = conn.fetchall()
     for result in results:
         china["confirmedCount"] = int(result[2])
         china["confirmedIncr"] = int(result[3])
@@ -145,14 +139,10 @@ def world_count():
         china["currentConfirmedCount"] = int(result[0])
         china["currentConfirmedIncr"] = int(result[1])
     for result in results2:
-        china['inputConfirmedCount'] = int(result[0])
-        china['inputConfirmedIncr'] = int(result[1])
-    for result in results3:
         china['inputTotalConfirmedCount'] = int(result[0])
-        china['inputTotalConfirmedIncr'] = china['inputConfirmedCount']
-    for result in results4:
-        china['chinaConfirmedCount'] = int(result[0])
-        china['chinaConfirmedIncr'] = int(result[1])
+        china['inputTotalConfirmedIncr'] = int(result[1])
+        china['chinaConfirmedCount'] = int(result[2])
+        china['chinaConfirmedIncr'] = int(result[3])
     return jsonify(china)
 
 if __name__ == '__main__':
