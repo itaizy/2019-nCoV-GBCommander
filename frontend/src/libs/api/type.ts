@@ -16,6 +16,10 @@ export interface TChinaCount {
     curedIncr: number;
     deadCount: number;
     deadIncr: number;
+    currentConfirmedCount: number;
+    currentConfirmedIncr: number;
+    chinaConfirmedCount: number;
+    chinaConfirmedIncr: number;
     inputConfirmedCount: number;
     inputConfirmedIncr: number;
     inputTotalConfirmedCount: number;

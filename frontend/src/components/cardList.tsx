@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import QuickCard from './quickCard'
 import { TChinaCount } from '../libs/api/type'
 import { APIGetChinaCount } from '../libs/api/api'
+import {Statistic,  Row, Col, Button, Card} from 'antd'
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
 
 const Root = styled.div`
     width: 100%;
@@ -28,16 +31,102 @@ export default function CardList() {
     }, [])
 
     return (
-        <Root>
+        <div>
             {
                 data ?
 
                     <>
+                    <Row>
+                        <Col span={16}>
+                            <Card>
+                                <Row>
+                                    <Col span={6}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外现有确诊</div>}
+                                            value={data.currentConfirmedCount} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            />
+                                        <Statistic 
+                                            value={data.currentConfirmedIncr} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计确诊</div>}
+                                            value={data.confirmedCount} 
+                                            valueStyle={{ color: '#B03060' }}
+                                            />
+                                        <Statistic 
+                                            value={data.confirmedIncr} 
+                                            valueStyle={{ color: '#B03060' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计死亡</div>}
+                                            value={data.deadCount} 
+                                            valueStyle={{ color: '#8B8B7A' }}
+                                            />
+                                        <Statistic 
+                                            value={data.deadIncr} 
+                                            valueStyle={{ color: '#8B8B7A' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                    <Col span={6}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计治愈</div>}
+                                            value={data.curedCount} 
+                                            valueStyle={{ color: '#3f8600' }}
+                                            />
+                                        <Statistic 
+                                            value={data.curedIncr} 
+                                            valueStyle={{ color: '#3f8600' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        {/* <Col span={1}>
+                        </Col> */}
+                        <Col span={8}>
+                            <Card>
+                                <Row>
+                                    <Col span={12}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>中国现有确诊</div>}
+                                            value={data.chinaConfirmedCount} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            />
+                                        <Statistic 
+                                            value={data.chinaConfirmedIncr} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Statistic 
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>中国累计输入</div>}
+                                            value={data.inputTotalConfirmedCount} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            />
+                                        <Statistic 
+                                            value={data.inputTotalConfirmedIncr} 
+                                            valueStyle={{ color: '#FF3030' }}
+                                            prefix={<ArrowUpOutlined />}/>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
+{/*                         
                         <QuickCard
                             data={[data?.confirmedCount, data?.confirmedIncr]}
                             text={"累计确诊"}
                             color={"red"}
                         />
+                        
+                        
+
                         <QuickCard
                             data={[data?.deadCount, data?.deadIncr]}
                             text={"死亡"}
@@ -57,7 +146,7 @@ export default function CardList() {
                             data={[data?.inputTotalConfirmedCount, data?.inputTotalConfirmedIncr]}
                             text={"累计境外输入"}
                             color={"red"}
-                        />
+                        /> */}
 
                     </>
                     : null
@@ -65,6 +154,6 @@ export default function CardList() {
 
 
 
-        </Root>
+        </div>
     )
 }

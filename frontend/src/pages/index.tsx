@@ -7,7 +7,7 @@ import TabBar from '../components/tabBar'
 import DataTable from '../components/table'
 import { TCountryMap } from '../libs/api/type'
 import { APIGetCountryMap, APIGetCountryTrend } from '../libs/api/api'
-import { message } from 'antd'
+import { message, Row, Col } from 'antd'
 import CardList from '../components/cardList'
 import getTrendOpt from '../libs/charts/line'
 
@@ -18,7 +18,7 @@ const Root = styled.div`
 `
 
 const Header = styled.div`
-    height: 14rem;
+    // height: 24rem;
     text-align:center;
     h1{
         height:6rem;
@@ -102,6 +102,7 @@ export default function index() {
                 <CardList />
 
             </Header>
+           
             <Content>
                 <LeftTable>
                     <DataTable
