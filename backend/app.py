@@ -123,7 +123,7 @@ def world_count():
         db=MYSQL_DB,
         charset='utf8mb4'
     ) as conn:
-        sql = "SELECT SUM(`confirmedCount`), SUM(`confirmedIncr`), SUM(`curedCount`), SUM(`curedIncr`), SUM(`deadCount`), SUM(`deadIncr`), SUM(`currentConfirmedCount`), SUM(`currentConfirmedIncr`) FROM(SELECT `name`, `englishName`, `confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr`, `currentConfirmedCount`, `currentConfirmedIncr` FROM ncov_data t WHERE (SELECT count(1) FROM ncov_data WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedCount` DESC) b WHERE `name` <> '中国';"
+        sql = "SELECT `nowConfirm`, `nowConfirmAdd`, `confirm`, `confirmAdd`, `heal`, `healAdd`, `dead`, `deadAdd` FROM ncov_data_tencent ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results = conn.fetchall()
         sql = "SELECT SUM(`confirmedCount`), SUM(`confirmedIncr`) FROM ncov_data WHERE (`date` = (SELECT MAX(`date`) FROM ncov_data WHERE `name` LIKE '%境外输入%') AND `name` LIKE '%境外输入%');"
@@ -133,14 +133,14 @@ def world_count():
         conn.execute(sql)
         results3 = conn.fetchall()
     for result in results:
-        china["confirmedCount"] = int(result[0])
-        china["confirmedIncr"] = int(result[1])
-        china["curedCount"] = int(result[2])
-        china["curedIncr"] = int(result[3])
-        china["deadCount"] = int(result[4])
-        china["deadIncr"] = int(result[5])
-        china["currentConfirmedCount"] = int(result[6])
-        china["currentConfirmedIncr"] = int(result[7])
+        china["confirmedCount"] = int(result[2])
+        china["confirmedIncr"] = int(result[3])
+        china["curedCount"] = int(result[4])
+        china["curedIncr"] = int(result[5])
+        china["deadCount"] = int(result[6])
+        china["deadIncr"] = int(result[7])
+        china["currentConfirmedCount"] = int(result[0])
+        china["currentConfirmedIncr"] = int(result[1])
     for result in results2:
         china['inputConfirmedCount'] = int(result[0])
         china['inputConfirmedIncr'] = int(result[1])
