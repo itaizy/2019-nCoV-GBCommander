@@ -132,6 +132,9 @@ def world_count():
         sql = "SELECT SUM(`confirmedCount`) FROM ncov_data WHERE `name` LIKE '%境外输入%';"
         conn.execute(sql)
         results3 = conn.fetchall()
+        sql = "SELECT `confirmedCount`, `confirmedIncr` FROM ncov_data WHERE name='中国' ORDER BY `date` DESC LIMIT 1;"
+        conn.execute(sql)
+        results4 = conn.fetchall()
     for result in results:
         china["confirmedCount"] = int(result[2])
         china["confirmedIncr"] = int(result[3])
@@ -147,7 +150,9 @@ def world_count():
     for result in results3:
         china['inputTotalConfirmedCount'] = int(result[0])
         china['inputTotalConfirmedIncr'] = china['inputConfirmedCount']
-    print(china)
+    for result in results4:
+        china['chinaConfirmedCount'] = int(result[0])
+        china['chinaConfirmedIncr'] = int(result[1])
     return jsonify(china)
 
 if __name__ == '__main__':
