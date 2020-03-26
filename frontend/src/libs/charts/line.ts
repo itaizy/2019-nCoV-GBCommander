@@ -7,9 +7,25 @@ const getLineBase = (xData: any[], legend: any[]) => ({
     xAxis: {
         type: 'category' as any,
         boundaryGap: false,
+        data: xData
     },
     yAxis: {
         type: 'value' as any
+    },
+    toolbox: {
+        left: 0,
+        bottom:"25%",
+        orient:"verticle",
+        show: true,
+        feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            dataView: {readOnly: false},
+            magicType: {type: ['line', 'bar']},
+            restore: {},
+            saveAsImage: {}
+        }
     },
     tooltip: {
         trigger: 'axis' as 'axis',
@@ -36,18 +52,20 @@ const getTrendOpt: (data: TCountryTrend) => EChartOption[] = (data) => {
             type: 'line',
             data: v.confirmedIncr
         }))
+    const xData = Object.entries(data)[0][1].dateList
+
     const legend = Object.keys(data)
 
     const opt =
         [{
-            ...getLineBase([], legend),
+            ...getLineBase(xData, legend),
             title: {
                 text: '累计确诊'
             },
             series: totalConfirmed
 
         }, {
-            ...getLineBase([], legend),
+            ...getLineBase(xData, legend),
             title: {
                 text: '新增确诊'
             },

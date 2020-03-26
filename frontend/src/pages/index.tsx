@@ -31,14 +31,17 @@ const Header = styled.div`
 const Content = styled.div`
     height: calc( 100% - 14rem );
     width: 100%;
-    display:flex;
 `
 const LeftTable = styled.div`
-    flex-basis: 30%;
+    width: 30%;
     height:100%;
+    display:inline-block;
 `
 const RightChart = styled.div`
-    flex-basis: 70%;
+    float:right;
+    width: 70%;
+    display:inline-block;
+    height:100%;
 `
 
 const TabBarContainer = styled.div`
@@ -71,11 +74,12 @@ export default function index() {
     }, [])
 
     const getTrendData = useCallback(() => {
-
-        selectedCountry.length > 0 && APIGetCountryTrend({
+        if (selectedCountry.length > 0) APIGetCountryTrend({
             country_list: selectedCountry,
             ...range,
         }).then(res => setTrendOpt(getTrendOpt(res.data)))
+        else
+            setTrendOpt([])
     }, [selectedCountry])
 
 
@@ -104,15 +108,14 @@ export default function index() {
                         data={DataMap}
                         select={mode == "line" ? {
                             onSelect(e, _, rows) {
-                                console.log(e)
-                                console.log(rows)
                                 setSelectedCountry(rows.map((e: any) => e.name))
-                            }
+                            },
+                            hideDefaultSelections: true,
+                            selectedRowKeys: selectedCountry
                         } : undefined}
                     />
                 </LeftTable>
                 <RightChart>
-
                     <TabBarContainer>
                         <TabBar
                             onChangeMode={(e) => setMode(e)}
@@ -120,9 +123,11 @@ export default function index() {
                     </TabBarContainer>
                     <ChartArea>
                         {
-                            mode == "map" ? <ReactEcharts option={mapOpt} /> :
+                            mode == "map" ? <ReactEcharts option={mapOpt} /> : trendOpt.length > 0 ?
                                 trendOpt.map((e, idx) =>
-                                    <ReactEcharts key={`rmap-${idx}`} option={e} height={"30em"} />)
+                                    <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
+                                <img src="/placeholder.png" />
+
                         }
                     </ChartArea>
                 </RightChart>
