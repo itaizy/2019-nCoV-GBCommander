@@ -127,8 +127,7 @@ export default function index() {
                             mode == "map" ? <ReactEcharts option={mapOpt} /> : trendOpt.length > 0 ?
                                 trendOpt.map((e, idx) =>
                                     <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
-                                <img src="/placeholder.png" />
-
+                                <img src="./placeholder.png" />
                         }
                     </ChartArea>
                 </RightChart>
