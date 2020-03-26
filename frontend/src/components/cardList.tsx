@@ -42,7 +42,7 @@ export default function CardList() {
                                 <Row>
                                     <Col span={6}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外现有确诊</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外现有确诊</div>}
                                             value={data.currentConfirmedCount} 
                                             valueStyle={{ color: '#FF3030' }}
                                             />
@@ -53,7 +53,7 @@ export default function CardList() {
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计确诊</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计确诊</div>}
                                             value={data.confirmedCount} 
                                             valueStyle={{ color: '#B03060' }}
                                             />
@@ -64,7 +64,7 @@ export default function CardList() {
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计死亡</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计死亡</div>}
                                             value={data.deadCount} 
                                             valueStyle={{ color: '#8B8B7A' }}
                                             />
@@ -75,7 +75,7 @@ export default function CardList() {
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>海外累计治愈</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计治愈</div>}
                                             value={data.curedCount} 
                                             valueStyle={{ color: '#3f8600' }}
                                             />
@@ -94,7 +94,7 @@ export default function CardList() {
                                 <Row>
                                     <Col span={12}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>中国现有确诊</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>中国现有确诊</div>}
                                             value={data.chinaConfirmedCount} 
                                             valueStyle={{ color: '#FF3030' }}
                                             />
@@ -105,7 +105,7 @@ export default function CardList() {
                                     </Col>
                                     <Col span={12}>
                                         <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold"}}>中国累计输入</div>}
+                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>中国累计输入</div>}
                                             value={data.inputTotalConfirmedCount} 
                                             valueStyle={{ color: '#FF3030' }}
                                             />
