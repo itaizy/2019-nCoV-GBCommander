@@ -34,6 +34,12 @@ export default function CardList() {
 
                     <>
                         <QuickCard
+                            data={[data?.currentConfirmedCount, data?.currentConfirmedIncr]}
+                            text={"现有确诊"}
+                            color={"red"}
+                        />
+
+                        <QuickCard
                             data={[data?.confirmedCount, data?.confirmedIncr]}
                             text={"累计确诊"}
                             color={"red"}
@@ -41,7 +47,7 @@ export default function CardList() {
                         <QuickCard
                             data={[data?.deadCount, data?.deadIncr]}
                             text={"死亡"}
-                            color={"red"}
+                            color={"grey"}
                         />
                         <QuickCard
                             data={[data?.curedCount, data?.curedIncr]}
