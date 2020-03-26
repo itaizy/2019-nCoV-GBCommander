@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Table } from 'antd'
 import { TCountryMap } from '../libs/api/type'
 import styled from 'styled-components'
@@ -27,20 +27,37 @@ const columns: ColumnsType<TCountryMap[0]> = [
 
 export default function DataTable({ data, select }:
     { data: TCountryMap, select?: TableRowSelection<TCountryMap[0]> }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const [height, setHeight] = useState(0)
+    useEffect(() => {
+        if (ref.current)
+            setHeight(ref.current.clientHeight)
+    }, [ref])
 
     return (
-        <Table
+        <div
             style={{
                 height: "100%",
-                maxHeight: "100%",
-                overflow: "scroll"
+                width: "100%"
             }}
-            rowSelection={select}
-            rowKey={(e: any) => e.name}
-            dataSource={data}
-            columns={columns}
-            pagination={false}
-            loading={data.length == 0}
-        />
+            ref={ref}
+        >
+            <Table
+                style={{
+                    height: "100%",
+                    maxHeight: "100%",
+                    overflow: "scroll"
+                }}
+                rowSelection={select}
+                scroll={{
+                    y: height
+                }}
+                rowKey={(e: any) => e.name}
+                dataSource={data}
+                columns={columns}
+                pagination={false}
+                loading={data.length == 0}
+            />
+        </div>
     )
 }
