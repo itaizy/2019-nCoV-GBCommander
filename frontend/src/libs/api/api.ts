@@ -1,12 +1,14 @@
 
 import Axios from 'axios'
 import { TChinaCount, TCountryMap } from './type'
-const base = "http://39.107.70.155:8021"
+import getConfig from 'next/config'
+const { publicRuntimeConfig } = getConfig()
+const { apiBase } = publicRuntimeConfig
 const URL = {
-    countryMap: `${base}/country_map`,
-    countryTend: `${base}/country_tend`,
-    countryList: `${base}/country_list`,
-    chinaCount: `${base}/china_count`,
+    countryMap: `${apiBase}/country_map`,
+    countryTend: `${apiBase}/country_tend`,
+    countryList: `${apiBase}/country_list`,
+    chinaCount: `${apiBase}/china_count`,
 }
 
 export const APIGetCountryMap = () => Axios.get<TCountryMap>(URL.countryMap)
