@@ -49,7 +49,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.currentConfirmedIncr} 
                                             valueStyle={{ color: '#FF3030' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.currentConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
@@ -60,7 +60,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.confirmedIncr} 
                                             valueStyle={{ color: '#B03060' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.confirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
@@ -71,7 +71,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.deadIncr} 
                                             valueStyle={{ color: '#8B8B7A' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.deadIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
                                     </Col>
                                     <Col span={6}>
                                         <Statistic 
@@ -82,7 +82,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.curedIncr} 
                                             valueStyle={{ color: '#3f8600' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.curedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined />}/>
                                     </Col>
                                 </Row>
                             </Card>
@@ -101,7 +101,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.chinaConfirmedIncr} 
                                             valueStyle={{ color: '#FF3030' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.chinaConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
                                     </Col>
                                     <Col span={12}>
                                         <Statistic 
@@ -112,7 +112,7 @@ export default function CardList() {
                                         <Statistic 
                                             value={data.inputTotalConfirmedIncr} 
                                             valueStyle={{ color: '#FF3030' }}
-                                            prefix={<ArrowUpOutlined />}/>
+                                            prefix={data.inputTotalConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
                                     </Col>
                                 </Row>
                             </Card>

@@ -14,6 +14,8 @@ const Root = styled.div`
 `
 const SButton = styled(Button)`
     height:100%;
+    margin: 0 auto;
+    width: 50%;
 `
 
 export default function TabBar({ onChangeMode }: IProps) {

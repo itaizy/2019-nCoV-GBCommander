@@ -18,7 +18,7 @@ const Root = styled.div`
 `
 
 const Header = styled.div`
-    // height: 24rem;
+    // height: 15rem;
     text-align:center;
     h1{
         height:6rem;
@@ -29,17 +29,18 @@ const Header = styled.div`
 `
 
 const Content = styled.div`
-    height: calc( 100% - 14rem );
+    height: calc( 100% - 16rem );
     width: 100%;
 `
 const LeftTable = styled.div`
-    width: 30%;
+    float:right;
+    width: 40%;
     height:100%;
     display:inline-block;
 `
 const RightChart = styled.div`
-    float:right;
-    width: 70%;
+    float:left;
+    width: 60%;
     display:inline-block;
     height:100%;
 `
