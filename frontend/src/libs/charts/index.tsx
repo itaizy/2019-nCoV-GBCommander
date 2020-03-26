@@ -25,7 +25,6 @@ export default function ReactEcharts({ option, width, height }: IProps) {
 
     useEffect(() => {
         if (chartObj) {
-            console.log(option)
             chartObj.setOption(option,true)
         }
     }, [chartObj, option])

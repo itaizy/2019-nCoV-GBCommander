@@ -35,9 +35,6 @@ export default function DataTable({ data, select }:
                 maxHeight: "100%",
                 overflow: "scroll"
             }}
-            // scroll={{
-            //     // y: 240
-            // }}
             rowSelection={select}
             rowKey={(e: any) => e.name}
             dataSource={data}

@@ -38,7 +38,6 @@ const LeftTable = styled.div`
     display:inline-block;
 `
 const RightChart = styled.div`
-
     float:right;
     width: 70%;
     display:inline-block;
@@ -59,7 +58,7 @@ export default function index() {
     const [DataTrend, setDataTrend] = useState<any[]>([])
     const [mapOpt, setMapOpt] = useState<EChartOption>({})
     const [trendOpt, setTrendOpt] = useState<EChartOption[]>([])
-    const [selectedCountry, setSelectedCountry] = useState<string[]>(["中国"])
+    const [selectedCountry, setSelectedCountry] = useState<string[]>([])
     const [range, setRange] = useState<{
         from: string, to: string
     }>({
@@ -75,11 +74,12 @@ export default function index() {
     }, [])
 
     const getTrendData = useCallback(() => {
-
-        selectedCountry.length > 0 && APIGetCountryTrend({
+        if (selectedCountry.length > 0) APIGetCountryTrend({
             country_list: selectedCountry,
             ...range,
         }).then(res => setTrendOpt(getTrendOpt(res.data)))
+        else
+            setTrendOpt([])
     }, [selectedCountry])
 
 
@@ -110,7 +110,7 @@ export default function index() {
                             onSelect(e, _, rows) {
                                 setSelectedCountry(rows.map((e: any) => e.name))
                             },
-                            hideDefaultSelections:true,
+                            hideDefaultSelections: true,
                             selectedRowKeys: selectedCountry
                         } : undefined}
                     />
@@ -123,9 +123,11 @@ export default function index() {
                     </TabBarContainer>
                     <ChartArea>
                         {
-                            mode == "map" ? <ReactEcharts option={mapOpt} /> :
+                            mode == "map" ? <ReactEcharts option={mapOpt} /> : trendOpt.length > 0 ?
                                 trendOpt.map((e, idx) =>
-                                    <ReactEcharts key={`rmap-${idx}`} option={e} height={"30em"} />)
+                                    <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
+                                <img src="/placeholder.png" />
+
                         }
                     </ChartArea>
                 </RightChart>
