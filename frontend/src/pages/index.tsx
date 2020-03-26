@@ -31,14 +31,18 @@ const Header = styled.div`
 const Content = styled.div`
     height: calc( 100% - 14rem );
     width: 100%;
-    display:flex;
 `
 const LeftTable = styled.div`
-    flex-basis: 30%;
+    width: 30%;
     height:100%;
+    display:inline-block;
 `
 const RightChart = styled.div`
-    flex-basis: 70%;
+
+    float:right;
+    width: 70%;
+    display:inline-block;
+    height:100%;
 `
 
 const TabBarContainer = styled.div`
@@ -55,7 +59,7 @@ export default function index() {
     const [DataTrend, setDataTrend] = useState<any[]>([])
     const [mapOpt, setMapOpt] = useState<EChartOption>({})
     const [trendOpt, setTrendOpt] = useState<EChartOption[]>([])
-    const [selectedCountry, setSelectedCountry] = useState<string[]>([])
+    const [selectedCountry, setSelectedCountry] = useState<string[]>(["中国"])
     const [range, setRange] = useState<{
         from: string, to: string
     }>({
@@ -104,15 +108,14 @@ export default function index() {
                         data={DataMap}
                         select={mode == "line" ? {
                             onSelect(e, _, rows) {
-                                console.log(e)
-                                console.log(rows)
                                 setSelectedCountry(rows.map((e: any) => e.name))
-                            }
+                            },
+                            hideDefaultSelections:true,
+                            selectedRowKeys: selectedCountry
                         } : undefined}
                     />
                 </LeftTable>
                 <RightChart>
-
                     <TabBarContainer>
                         <TabBar
                             onChangeMode={(e) => setMode(e)}

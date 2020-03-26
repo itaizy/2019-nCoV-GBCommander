@@ -4,9 +4,10 @@ import nameMap from '../../../assets/name_map.json'
 
 const getOption: (data: TCountryMap) => EChartOption = (data) => ({
     visualMap: [{
+        type: "continuous" as "continuous",
         left: 'right' as any,
-        // min: 500000,
-        // max: 38000000,
+        min: 0,
+        max:5000,
         inRange: {
             color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
         },
