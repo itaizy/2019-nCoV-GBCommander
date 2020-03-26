@@ -8,7 +8,7 @@ const URL = {
     countryMap: `${apiBase}/country_map`,
     countryTend: `${apiBase}/country_tend`,
     countryList: `${apiBase}/country_list`,
-    chinaCount: `${apiBase}/china_count`,
+    chinaCount: `${apiBase}/world_count`,
 }
 
 export const APIGetCountryMap = () => Axios.get<TCountryMap>(URL.countryMap)
