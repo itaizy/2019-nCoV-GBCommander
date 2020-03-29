@@ -39,6 +39,32 @@ def country_map():
           })
     return jsonify(countries)
 
+@app.route('/api/country_incr_map')
+@cross_origin()
+def country_incr_map():
+    results = []
+    with pymysql.connect(
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        user=MYSQL_USER,
+        passwd=MYSQL_PASSWORD,
+        db=MYSQL_DB,
+        charset='utf8mb4'
+    ) as conn:
+        sql = "SELECT `name`, `englishName`, `confirmedIncr`, `curedIncr`, `deadIncr` FROM ncov_data t WHERE (SELECT count(1) FROM ncov_data WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedIncr` DESC;"
+        conn.execute(sql)
+        results = conn.fetchall()
+    countries = []
+    for result in results:
+        countries.append({
+            "name": result[0],
+            "englishName": result[1],
+            "confirmedIncr": result[2],
+            "curedIncr": result[3],
+            "deadIncr": result[4]
+          })
+    return jsonify(countries)
+
 @app.route('/api/country_tend', methods=['POST'])
 @cross_origin()
 def country_tend():
