@@ -10,6 +10,7 @@ import { APIGetCountryMap, APIGetCountryTrend } from '../libs/api/api'
 import { message, Row, Col } from 'antd'
 import CardList from '../components/cardList'
 import getTrendOpt from '../libs/charts/line'
+import moment from 'moment'
 
 const Root = styled.div`
     height:100vh;
@@ -64,7 +65,7 @@ export default function index() {
         from: string, to: string
     }>({
         from: "2020-03-01",
-        to: "2020-03-20",
+        to:moment().format("YYYY-MM-DD")
 
     })
 
@@ -125,7 +126,10 @@ export default function index() {
                     </TabBarContainer>
                     <ChartArea>
                         {
-                            mode == "map" ? <ReactEcharts option={mapOpt} /> : trendOpt.length > 0 ?
+                            mode == "map" ? <>
+
+                            <ReactEcharts option={mapOpt} /> 
+                            </>: trendOpt.length > 0 ?
                                 trendOpt.map((e, idx) =>
                                     <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
                                 <img src="./placeholder.png" />

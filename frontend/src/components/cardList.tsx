@@ -27,10 +27,10 @@ const item = [
     "累计境外输入"
 ]
 const Time = styled.div`
-    position:relative;
-    
-    
-
+    width: 100%;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: flex-end;
 `
 
 export default function CardList() {
@@ -42,7 +42,7 @@ export default function CardList() {
 
     return (
         <div>
-            <Time>{moment( data?.modifyTime).format('LLLL')}</Time>
+            <Time><span>统计截止:{moment( data?.modifyTime).format('LLL')}, 更新于{ moment.duration(moment().diff(moment(data?.modifyTime))).asHours().toFixed(1)}小时前</span></Time>
             {
                 data ?
                     <>
