@@ -56,18 +56,7 @@
   resolved "https://registry.npm.taobao.org/@ant-design/icons-svg/download/@ant-design/icons-svg-4.0.0.tgz#6683db0df97c0c6900bb28a280faf391522ec734"
   integrity sha1-ZoPbDfl8DGkAuyiigPrzkVIuxzQ=
 
-"@ant-design/icons@^4.0.0":
-  version "4.0.3"
-  resolved "https://registry.npm.taobao.org/@ant-design/icons/download/@ant-design/icons-4.0.3.tgz#ba2fd8160cb1a51ba31979319355a47c5d7b5376"
-  integrity sha1-ui/YFgyxpRujGXkxk1WkfF17U3Y=
-  dependencies:
-    "@ant-design/colors" "^3.1.0"
-    "@ant-design/icons-svg" "^4.0.0"
-    classnames "^2.2.6"
-    insert-css "^2.0.0"
-    rc-util "^4.9.0"
-
-"@ant-design/icons@^4.0.3":
+"@ant-design/icons@^4.0.0", "@ant-design/icons@^4.0.3":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-4.0.3.tgz#ba2fd8160cb1a51ba31979319355a47c5d7b5376"
   integrity sha512-vWzmt1QsWpnmOfT/wtAIeKTheN61Mo8KtaLm0yosd6vVUEVdc5E/pmcrd8lIp2CmuRT7qCU6e9x/RMffv0hOJg==

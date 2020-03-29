@@ -4,7 +4,11 @@ import QuickCard from './quickCard'
 import { TChinaCount } from '../libs/api/type'
 import { APIGetChinaCount } from '../libs/api/api'
 import {Statistic,  Row, Col, Button, Card} from 'antd'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+moment.locale('zh-ch')
 
 
 const Root = styled.div`
@@ -22,6 +26,12 @@ const item = [
     "境外输入",
     "累计境外输入"
 ]
+const Time = styled.div`
+    position:relative;
+    
+    
+
+`
 
 export default function CardList() {
     const [data, setData] = useState<TChinaCount | undefined>(undefined)
@@ -32,9 +42,9 @@ export default function CardList() {
 
     return (
         <div>
+            <Time>{moment( data?.modifyTime).format('LLLL')}</Time>
             {
                 data ?
-
                     <>
                     <Row>
                         <Col span={16}>
