@@ -126,7 +126,7 @@ def world_count():
         sql = "SELECT `nowConfirm`, `nowConfirmAdd`, `confirm`, `confirmAdd`, `heal`, `healAdd`, `dead`, `deadAdd` FROM ncov_data_tencent ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results = conn.fetchall()
-        sql = "SELECT `suspectedCount`, `suspectedIncr`, `currentConfirmedCount`, `currentConfirmedIncr` FROM ncov_data_global ORDER BY `date` DESC LIMIT 1;"
+        sql = "SELECT `suspectedCount`, `suspectedIncr`, `currentConfirmedCount`, `currentConfirmedIncr`, `modifyTime` FROM ncov_data_global ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results2 = conn.fetchall()
     for result in results:
@@ -143,6 +143,7 @@ def world_count():
         china['inputTotalConfirmedIncr'] = int(result[1])
         china['chinaConfirmedCount'] = int(result[2])
         china['chinaConfirmedIncr'] = int(result[3])
+        china['modifyTime'] = datetime.datetime.fromtimestamp(int(result[4]) / 1000).isoformat()
     return jsonify(china)
 
 if __name__ == '__main__':
