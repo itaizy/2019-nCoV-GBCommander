@@ -12,6 +12,12 @@ const columns: ColumnsType<TCountryMap[0]> = [
     },
 
     {
+        dataIndex: "confirmedIncr", title: "新增", key: "confirmedIncr",
+
+        sorter: (a, b) => a.confirmedIncr- b.confirmedIncr
+    },
+
+    {
         dataIndex: "curedCount", title: "治愈", key: "curedCount",
 
         sorter: (a, b) => a.curedCount - b.curedCount

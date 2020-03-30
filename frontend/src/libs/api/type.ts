@@ -1,4 +1,5 @@
 interface tcountrydata {
+    confirmedIncr:number;
     confirmedCount: number;
     curedCount: number;
     deadCount: number;
