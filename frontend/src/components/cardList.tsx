@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import QuickCard from './quickCard'
 import { TChinaCount } from '../libs/api/type'
 import { APIGetChinaCount } from '../libs/api/api'
-import {Statistic,  Row, Col, Button, Card} from 'antd'
+import { Statistic, Row, Col, Button, Card } from 'antd'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
@@ -39,96 +39,102 @@ export default function CardList() {
         APIGetChinaCount().then(res => setData(res.data))
 
     }, [])
+    const duration = moment.duration(moment().diff(moment(data?.modifyTime)))
 
     return (
         <div>
-            <Time><span>统计截止:{moment( data?.modifyTime).format('LLL')}, 更新于{ moment.duration(moment().diff(moment(data?.modifyTime))).asHours().toFixed(1)}小时前</span></Time>
+            <Time><span>统计截止:{moment(data?.modifyTime).format('LLL')}, 更新于{
+                Math.floor(duration.asHours())
+            }小时{
+                    Math.round(duration.asMinutes() % 60)
+
+                }分钟前</span></Time>
             {
                 data ?
                     <>
-                    <Row>
-                        <Col span={16}>
-                            <Card>
-                                <Row>
-                                    <Col span={6}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外现有确诊</div>}
-                                            value={data.currentConfirmedCount} 
-                                            valueStyle={{ color: '#FF3030' }}
+                        <Row>
+                            <Col span={16}>
+                                <Card>
+                                    <Row>
+                                        <Col span={6}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>海外现有确诊</div>}
+                                                value={data.currentConfirmedCount}
+                                                valueStyle={{ color: '#FF3030' }}
                                             />
-                                        <Statistic 
-                                            value={data.currentConfirmedIncr} 
-                                            valueStyle={{ color: '#FF3030' }}
-                                            prefix={data.currentConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计确诊</div>}
-                                            value={data.confirmedCount} 
-                                            valueStyle={{ color: '#B03060' }}
+                                            <Statistic
+                                                value={data.currentConfirmedIncr}
+                                                valueStyle={{ color: '#FF3030' }}
+                                                prefix={data.currentConfirmedIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                        <Col span={6}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>海外累计确诊</div>}
+                                                value={data.confirmedCount}
+                                                valueStyle={{ color: '#B03060' }}
                                             />
-                                        <Statistic 
-                                            value={data.confirmedIncr} 
-                                            valueStyle={{ color: '#B03060' }}
-                                            prefix={data.confirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计死亡</div>}
-                                            value={data.deadCount} 
-                                            valueStyle={{ color: '#8B8B7A' }}
+                                            <Statistic
+                                                value={data.confirmedIncr}
+                                                valueStyle={{ color: '#B03060' }}
+                                                prefix={data.confirmedIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                        <Col span={6}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>海外累计死亡</div>}
+                                                value={data.deadCount}
+                                                valueStyle={{ color: '#8B8B7A' }}
                                             />
-                                        <Statistic 
-                                            value={data.deadIncr} 
-                                            valueStyle={{ color: '#8B8B7A' }}
-                                            prefix={data.deadIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>海外累计治愈</div>}
-                                            value={data.curedCount} 
-                                            valueStyle={{ color: '#3f8600' }}
+                                            <Statistic
+                                                value={data.deadIncr}
+                                                valueStyle={{ color: '#8B8B7A' }}
+                                                prefix={data.deadIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                        <Col span={6}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>海外累计治愈</div>}
+                                                value={data.curedCount}
+                                                valueStyle={{ color: '#3f8600' }}
                                             />
-                                        <Statistic 
-                                            value={data.curedIncr} 
-                                            valueStyle={{ color: '#3f8600' }}
-                                            prefix={data.curedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined />}/>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Col>
-                        {/* <Col span={1}>
+                                            <Statistic
+                                                value={data.curedIncr}
+                                                valueStyle={{ color: '#3f8600' }}
+                                                prefix={data.curedIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+                            {/* <Col span={1}>
                         </Col> */}
-                        <Col span={8}>
-                            <Card>
-                                <Row>
-                                    <Col span={12}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>中国现有确诊</div>}
-                                            value={data.chinaConfirmedCount} 
-                                            valueStyle={{ color: '#FF3030' }}
+                            <Col span={8}>
+                                <Card>
+                                    <Row>
+                                        <Col span={12}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>中国现有确诊</div>}
+                                                value={data.chinaConfirmedCount}
+                                                valueStyle={{ color: '#FF3030' }}
                                             />
-                                        <Statistic 
-                                            value={data.chinaConfirmedIncr} 
-                                            valueStyle={{ color: '#FF3030' }}
-                                            prefix={data.chinaConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Statistic 
-                                            title={<div style={{fontSize:"1.2rem", fontWeight: "bold", color: "black"}}>中国累计输入</div>}
-                                            value={data.inputTotalConfirmedCount} 
-                                            valueStyle={{ color: '#FF3030' }}
+                                            <Statistic
+                                                value={data.chinaConfirmedIncr}
+                                                valueStyle={{ color: '#FF3030' }}
+                                                prefix={data.chinaConfirmedIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                        <Col span={12}>
+                                            <Statistic
+                                                title={<div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "black" }}>中国累计输入</div>}
+                                                value={data.inputTotalConfirmedCount}
+                                                valueStyle={{ color: '#FF3030' }}
                                             />
-                                        <Statistic 
-                                            value={data.inputTotalConfirmedIncr} 
-                                            valueStyle={{ color: '#FF3030' }}
-                                            prefix={data.inputTotalConfirmedIncr>0?<ArrowUpOutlined />:<ArrowDownOutlined  />}/>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Col>
-                    </Row>
-{/*                         
+                                            <Statistic
+                                                value={data.inputTotalConfirmedIncr}
+                                                valueStyle={{ color: '#FF3030' }}
+                                                prefix={data.inputTotalConfirmedIncr > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />} />
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+                        </Row>
+                        {/*                         
                         <QuickCard
                             data={[data?.currentConfirmedCount, data?.currentConfirmedIncr]}
                             text={"现有确诊"}

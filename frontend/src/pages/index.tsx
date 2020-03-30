@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import getMapOpt from '../libs/charts/worldmap'
+import { getMapOpt, getMapIncrOpt } from '../libs/charts/worldmap'
 import ReactEcharts from '../libs/charts'
 import styled from 'styled-components'
 import { EChartOption, getMap } from 'echarts'
 import TabBar from '../components/tabBar'
 import DataTable from '../components/table'
-import { TCountryMap } from '../libs/api/type'
-import { APIGetCountryMap, APIGetCountryTrend } from '../libs/api/api'
-import { message, Row, Col } from 'antd'
+import { TCountryMap, TCountryIncrMap } from '../libs/api/type'
+import { APIGetCountryMap, APIGetCountryTrend, APICountryIncr } from '../libs/api/api'
+import { message, Row, Col, Radio } from 'antd'
 import CardList from '../components/cardList'
 import getTrendOpt from '../libs/charts/line'
 import moment from 'moment'
@@ -45,18 +45,28 @@ const RightChart = styled.div`
     display:inline-block;
     height:100%;
 `
+const FloatingArea = styled.div`
+    position: absolute;
+    top :1px;
+    right:1rem;
+
+
+`
 
 const TabBarContainer = styled.div`
     height: 54.6px;
 `
 
 const ChartArea = styled.div`
+    position: relative;
     height: calc( 100% - 54.6px );
 `
 
 export default function index() {
     const [mode, setMode] = useState<"map" | "line">("map")
     const [DataMap, setDataMap] = useState<TCountryMap>([])
+    const [DataIncurMap, setDataIncurMap] = useState<TCountryIncrMap>([])
+    const [DataMapMode, setDataMapMode] = useState("acc")
     const [DataTrend, setDataTrend] = useState<any[]>([])
     const [mapOpt, setMapOpt] = useState<EChartOption>({})
     const [trendOpt, setTrendOpt] = useState<EChartOption[]>([])
@@ -65,15 +75,21 @@ export default function index() {
         from: string, to: string
     }>({
         from: "2020-03-01",
-        to:moment().format("YYYY-MM-DD")
+        to: moment().format("YYYY-MM-DD")
 
     })
 
     const getCountryMap = useCallback(() => {
-        APIGetCountryMap()
-            .then(res => setDataMap(res.data))
-            .catch(() => message.error("error"))
-    }, [])
+        console.log("DataMapMode effect", DataMapMode)
+        if (DataMapMode == "acc")
+            APIGetCountryMap()
+                .then(res => setDataMap(res.data))
+                .catch(() => message.error("error"))
+        else
+            APICountryIncr()
+                .then(res => setDataIncurMap(res.data))
+                .catch(() => message.error("error"))
+    }, [DataMapMode])
 
     const getTrendData = useCallback(() => {
         if (selectedCountry.length > 0) APIGetCountryTrend({
@@ -87,11 +103,15 @@ export default function index() {
 
 
     useEffect(() => {
-        setMapOpt(getMapOpt(DataMap))
-    }, [DataMap])
+        if (DataMapMode == 'acc')
+            setMapOpt(getMapOpt(DataMap))
+        else
+            setMapOpt(getMapIncrOpt(DataIncurMap))
+
+    }, [DataMap, DataIncurMap, DataMapMode])
 
 
-    useEffect(() => getCountryMap(), [])
+    useEffect(() => getCountryMap(), [DataMapMode])
 
     useEffect(() => getTrendData(), [selectedCountry])
 
@@ -104,7 +124,7 @@ export default function index() {
                 <CardList />
 
             </Header>
-           
+
             <Content>
                 <LeftTable>
                     <DataTable
@@ -127,12 +147,21 @@ export default function index() {
                     <ChartArea>
                         {
                             mode == "map" ? <>
+                                <FloatingArea>
+                                    <Radio.Group onChange={e => {
+                                        console.log(e.target.value)
+                                        return setDataMapMode(e.target.value)
+                                    }} value={DataMapMode}>
+                                        <Radio value={"acc"}>累计</Radio>
+                                        <Radio value={"inc"}>新增</Radio>
+                                    </Radio.Group>
+                                </FloatingArea>
 
-                            <ReactEcharts option={mapOpt} /> 
-                            </>: trendOpt.length > 0 ?
-                                trendOpt.map((e, idx) =>
-                                    <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
-                                <img src="./placeholder.png" />
+                                <ReactEcharts option={mapOpt} />
+                            </> : trendOpt.length > 0 ?
+                                    trendOpt.map((e, idx) =>
+                                        <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
+                                    <img src="./placeholder.png" />
                         }
                     </ChartArea>
                 </RightChart>
