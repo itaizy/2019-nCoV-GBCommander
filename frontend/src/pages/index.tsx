@@ -38,12 +38,14 @@ const LeftTable = styled.div`
     width: 40%;
     height:100%;
     display:inline-block;
+    z-index:10;
 `
 const RightChart = styled.div`
     float:left;
     width: 60%;
     display:inline-block;
     height:100%;
+    overflow:hidden;
 `
 const FloatingArea = styled.div`
     position: absolute;
@@ -161,7 +163,9 @@ export default function index() {
                             </> : trendOpt.length > 0 ?
                                     trendOpt.map((e, idx) =>
                                         <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
-                                    <img src="./placeholder.png" />
+                                    <img src="./placeholder.png" style={{
+                                        maxWidth:"100%",
+                                    }}/>
                         }
                     </ChartArea>
                 </RightChart>
