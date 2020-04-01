@@ -7,15 +7,16 @@ import { TableRowSelection, ColumnsType } from 'antd/lib/table/interface'
 const columns: ColumnsType<TCountryMap[0]> = [
     { dataIndex: "name", title: "国家", key: "name" },
     {
-        dataIndex: "confirmedCount", title: "确诊", key: "confirmedCount",
-        sorter: (a, b) => a.confirmedCount - b.confirmedCount
-    },
-
-    {
         dataIndex: "confirmedIncr", title: "新增", key: "confirmedIncr",
 
         sorter: (a, b) => a.confirmedIncr- b.confirmedIncr
     },
+    {
+        dataIndex: "confirmedCount", title: "确诊", key: "confirmedCount",
+        sorter: (a, b) => a.confirmedCount - b.confirmedCount
+    },
+
+   
 
     {
         dataIndex: "curedCount", title: "治愈", key: "curedCount",

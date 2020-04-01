@@ -44,12 +44,14 @@ const getTrendOpt: (data: TCountryTrend) => EChartOption[] = (data) => {
         Object.entries(data).map(([k, v]) => ({
             name: k,
             type: 'line',
+            stack: '总量',
             data: v.confirmedCount
         }))
     const deltaConfirmed =
         Object.entries(data).map(([k, v], idx) => ({
             name: k,
             type: 'line',
+            stack: '总量',
             data: v.confirmedIncr
         }))
     const xData = Object.entries(data)[0][1].dateList

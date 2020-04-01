@@ -163,9 +163,11 @@ export default function index() {
                             </> : trendOpt.length > 0 ?
                                     trendOpt.map((e, idx) =>
                                         <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
-                                    <img src="./placeholder.png" style={{
-                                        maxWidth:"100%",
+                                    <div style={{textAlign: "center"}}>
+                                    <img src="./placeholder0401.png" style={{
+                                        maxWidth:"70%",
                                     }}/>
+                                    </div>
                         }
                     </ChartArea>
                 </RightChart>
