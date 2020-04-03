@@ -22,7 +22,9 @@ const getLineBase = (xData: any[], legend: any[]) => ({
                 yAxisIndex: 'none'
             },
             dataView: {readOnly: false},
-            magicType: {type: ['line', 'bar']},
+            magicType: {
+                type: ['line', 'bar', 'stack', 'tiled']
+            },
             restore: {},
             saveAsImage: {}
         }
@@ -43,15 +45,18 @@ const getTrendOpt: (data: TCountryTrend) => EChartOption[] = (data) => {
     const totalConfirmed =
         Object.entries(data).map(([k, v]) => ({
             name: k,
-            type: 'line',
+            type: 'bar',
             stack: '总量',
-            data: v.confirmedCount
+            data: v.confirmedCount,
+            areaStyle: {},
+
         }))
     const deltaConfirmed =
         Object.entries(data).map(([k, v], idx) => ({
             name: k,
-            type: 'line',
+            type: 'bar',
             stack: '总量',
+            areaStyle: {},
             data: v.confirmedIncr
         }))
     const xData = Object.entries(data)[0][1].dateList
