@@ -25,7 +25,7 @@ def country_map():
         db=MYSQL_DB,
         charset='utf8mb4'
     ) as conn:
-        sql = "SELECT `name`, `englishName`, `confirmedCount`, `curedCount`, `deadCount` FROM ncov_data t WHERE (SELECT count(1) FROM ncov_data WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedCount` DESC;"
+        sql = "SELECT `name`, `englishName`, `confirmedCount`, `curedCount`, `deadCount`, `confirmedIncr` FROM ncov_data_jhu t WHERE (SELECT count(1) FROM ncov_data_jhu WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedCount` DESC;"
         conn.execute(sql)
         results = conn.fetchall()
     countries = []
@@ -34,6 +34,7 @@ def country_map():
             "name": result[0],
             "englishName": result[1],
             "confirmedCount": result[2],
+            "confirmedIncr": result[5],
             "curedCount": result[3],
             "deadCount": result[4]
           })
@@ -51,7 +52,7 @@ def country_incr_map():
         db=MYSQL_DB,
         charset='utf8mb4'
     ) as conn:
-        sql = "SELECT `name`, `englishName`, `confirmedIncr`, `curedIncr`, `deadIncr` FROM ncov_data t WHERE (SELECT count(1) FROM ncov_data WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedIncr` DESC;"
+        sql = "SELECT `name`, `englishName`, `confirmedIncr`, `curedIncr`, `deadIncr` FROM ncov_data_jhu t WHERE (SELECT count(1) FROM ncov_data_jhu WHERE `name` = t.`name` AND `date` > t.`date` ) < 1 AND `level` = 'country' ORDER BY `confirmedIncr` DESC;"
         conn.execute(sql)
         results = conn.fetchall()
     countries = []
@@ -89,7 +90,7 @@ def country_tend():
             db=MYSQL_DB,
             charset='utf8mb4'
         ) as conn:
-            sql = 'SELECT `name`, `englishName`, `date`, `confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr` FROM	ncov_data WHERE	`name` IN ({}) AND date >= "{}" AND date <= "{}";'
+            sql = 'SELECT `name`, `englishName`, `date`, `confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr` FROM	ncov_data_jhu WHERE	`name` IN ({}) AND date >= "{}" AND date <= "{}";'
             conn.execute(sql.format(",".join(['"' + j + '"' for j in country_list]), begin_time, end_time))
             results = conn.fetchall()
         for result in results:
@@ -126,7 +127,7 @@ def country_list():
         db=MYSQL_DB,
         charset='utf8mb4'
     ) as conn:
-        sql = "SELECT DISTINCT `name`, `englishName`, `countryShortCode` FROM ncov_data WHERE `level`='country';"
+        sql = "SELECT DISTINCT `name`, `englishName`, `countryShortCode` FROM ncov_data_jhu WHERE `level`='country';"
         conn.execute(sql)
         results = conn.fetchall()
     for result in results:
@@ -149,27 +150,31 @@ def world_count():
         db=MYSQL_DB,
         charset='utf8mb4'
     ) as conn:
-        sql = "SELECT `nowConfirm`, `nowConfirmAdd`, `confirm`, `confirmAdd`, `heal`, `healAdd`, `dead`, `deadAdd` FROM ncov_data_tencent ORDER BY `date` DESC LIMIT 1;"
+        sql = "SELECT `confirm`, `confirmAdd`, `heal`, `healAdd`, `dead`, `deadAdd` FROM ncov_data_statistic_jhu ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results = conn.fetchall()
         sql = "SELECT `suspectedCount`, `suspectedIncr`, `currentConfirmedCount`, `currentConfirmedIncr`, `modifyTime` FROM ncov_data_global ORDER BY `date` DESC LIMIT 1;"
         conn.execute(sql)
         results2 = conn.fetchall()
+        sql = "SELECT `nowConfirm`, `nowConfirmAdd` FROM ncov_data_tencent ORDER BY `date` DESC LIMIT 1;"
+        conn.execute(sql)
+        results3 = conn.fetchall()
     for result in results:
-        china["confirmedCount"] = int(result[2])
-        china["confirmedIncr"] = int(result[3])
-        china["curedCount"] = int(result[4])
-        china["curedIncr"] = int(result[5])
-        china["deadCount"] = int(result[6])
-        china["deadIncr"] = int(result[7])
-        china["currentConfirmedCount"] = int(result[0])
-        china["currentConfirmedIncr"] = int(result[1])
+        china["confirmedCount"] = int(result[0])
+        china["confirmedIncr"] = int(result[1])
+        china["curedCount"] = int(result[2])
+        china["curedIncr"] = int(result[3])
+        china["deadCount"] = int(result[4])
+        china["deadIncr"] = int(result[5])
     for result in results2:
         china['inputTotalConfirmedCount'] = int(result[0])
         china['inputTotalConfirmedIncr'] = int(result[1])
         china['chinaConfirmedCount'] = int(result[2])
         china['chinaConfirmedIncr'] = int(result[3])
         china['modifyTime'] = datetime.datetime.fromtimestamp(int(result[4]) / 1000).isoformat()
+    for result in results3:
+        china["currentConfirmedCount"] = int(result[0])
+        china["currentConfirmedIncr"] = int(result[1])
     return jsonify(china)
 
 if __name__ == '__main__':
