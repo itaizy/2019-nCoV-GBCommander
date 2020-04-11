@@ -40,7 +40,7 @@ export default function TabBar({ onChangeMode }: IProps) {
                     onChangeMode("dead")
                 }}
                 type={mode == "dead" ? "primary" : "link"}
-            > 死亡趋势 </SButton>
+            > 河流趋势 </SButton>
         </Root >
     )
 }

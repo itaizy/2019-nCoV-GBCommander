@@ -6,7 +6,7 @@ import { EChartOption, getMap } from 'echarts'
 import TabBar from '../components/tabBar'
 import DataTable from '../components/table'
 import { TCountryMap, TCountryIncrMap } from '../libs/api/type'
-import { APIGetCountryMap, APIGetCountryTrend, APICountryIncr, APIGetDeadIncrTrend, APIGetDeadIncrTrendBar } from '../libs/api/api'
+import { APIGetCountryMap, APIGetCountryTrend, APICountryIncr, APIGetDeadIncrTrend, APIGetDeadIncrTrendBar, APIGetDeadIncrTrendAfrica } from '../libs/api/api'
 import { message, Row, Col, Radio } from 'antd'
 import CardList from '../components/cardList'
 import getTrendOpt from '../libs/charts/line'
@@ -112,6 +112,10 @@ export default function index() {
             APIGetDeadIncrTrend()
                 .then(res => setDeadTrendOpt(getThemeRiverOpt(res.data)))
                 .catch(() => message.error("error"))
+        else if (DataDeadMode == "themeAfrica")
+            APIGetDeadIncrTrendAfrica()
+                .then(res => setDeadTrendOpt(getThemeRiverOpt(res.data)))
+                .catch(() => message.error("error"))
         else
             APIGetDeadIncrTrendBar()
                 .then(res => setDeadTrendBarOpt(getTrendBarOpt(res.data)))
@@ -199,14 +203,15 @@ export default function index() {
                                                 console.log(e.target.value)
                                                 return setDataDeadMode(e.target.value)
                                             }} value={DataDeadMode}>
-                                                <Radio style={radioStyle} value={"theme"}>河流图</Radio>
-                                                <Radio style={radioStyle} value={"bar"}>柱状图</Radio>
+                                                <Radio style={radioStyle} value={"theme"}>河流图(死亡)</Radio>
+                                                <Radio style={radioStyle} value={"themeAfrica"}>河流图(非洲确诊)</Radio>
+                                                <Radio style={radioStyle} value={"bar"}>柱状图(死亡)</Radio>
                                             </Radio.Group>
                                         </FloatingArea>
                                         {
-                                            DataDeadMode == "theme" ?
-                                                <ReactEcharts option={deadTrendOpt} height={"60%"}/> :
-                                                <ReactEcharts option={deadTrendBarOpt} height={"50%"}/>
+                                            DataDeadMode == "bar" ?
+                                                <ReactEcharts option={deadTrendBarOpt}/> :
+                                                <ReactEcharts option={deadTrendOpt}/> 
                                         }
                                     </>
                         }

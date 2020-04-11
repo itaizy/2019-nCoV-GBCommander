@@ -12,6 +12,7 @@ const URL = {
     chinaCount: `${apiBase}/world_count`,
     deadtrend: `${apiBase}/dead_river_flow`,
     deadtrendbar: `${apiBase}/dead_bar`,
+    africaconfirmflow: `${apiBase}/africa_confirm_flow`,
 }
 
 export const APIGetCountryMap = () => Axios.get<TCountryMap>(URL.countryMap)
@@ -24,4 +25,5 @@ export const APIGetCountryTrend = (payload: {
 export const APIGetChinaCount = () => Axios.get<TChinaCount>(URL.chinaCount)
 export const APIGetDeadIncrTrend = () => Axios.get<TDeadIncr>(URL.deadtrend)
 export const APIGetDeadIncrTrendBar = () => Axios.get<TDeadIncrBar>(URL.deadtrendbar)
+export const APIGetDeadIncrTrendAfrica = () => Axios.get<TDeadIncr>(URL.africaconfirmflow)
 
