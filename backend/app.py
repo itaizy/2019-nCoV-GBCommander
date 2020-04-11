@@ -290,5 +290,36 @@ def dead_bar():
                 bar[part]['deadIncrPercent'].append(round(result_dict[date][part] * 100/ result_dict[date]['total'], 2))
     return jsonify(bar)
 
+@app.route('/api/africa_confirm_flow')
+@cross_origin()
+def africa_confirm_flow():
+    country_dict = {
+        "非洲": ['埃及', '利比亚', '苏丹', '突尼斯', '阿尔及利亚', '摩洛哥', '埃塞俄比亚', '厄立特里亚国', '索马里', '吉布提',
+               '肯尼亚', '坦桑尼亚', '乌干达', '卢旺达', '布隆迪', '塞舌尔', '乍得', '中非共和国', '喀麦隆', '赤道几内亚',
+               '加蓬', '刚果(布)', '刚果(金)', '圣多美与普林希比共和国', '毛里塔尼亚', '西撒哈拉', '塞内加尔', '冈比亚',
+               '马里', '布基纳法索', '几内亚', '几内亚比绍', '佛得角', '塞拉利昂', '利比里亚', '科特迪瓦', '加纳', '多哥',
+               '贝宁', '尼日尔', '赞比亚', '安哥拉', '津巴布韦', '马拉维', '莫桑比克', '博茨瓦纳', '纳米比亚', '南非',
+               '斯威士兰', '马达加斯加岛', '毛里求斯'],
+    }
+    river_flow = {
+        "data": [],
+        "legend": [i for i in country_dict['非洲']]
+    }
+    with pymysql.connect(
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        user=MYSQL_USER,
+        passwd=MYSQL_PASSWORD,
+        db=MYSQL_DB,
+        charset='utf8mb4'
+    ) as conn:
+        for part in country_dict:
+            sql = "SELECT `name`, `date`, SUM(`confirmedIncr`) FROM ncov_data_jhu WHERE `name` IN (" + ",".join(["'" + j + "'" for j in country_dict[part]]) + ") AND date >= '2020-03-01' GROUP BY `date`, `name`;"
+            conn.execute(sql)
+            results = conn.fetchall()
+            for result in results:
+                river_flow['data'].append([result[1].strftime("%Y-%m-%d"), int(result[2]), result[0]])
+    return jsonify(river_flow)
+
 if __name__ == '__main__':
     app.run()
