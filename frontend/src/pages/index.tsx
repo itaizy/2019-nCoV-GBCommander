@@ -6,10 +6,12 @@ import { EChartOption, getMap } from 'echarts'
 import TabBar from '../components/tabBar'
 import DataTable from '../components/table'
 import { TCountryMap, TCountryIncrMap } from '../libs/api/type'
-import { APIGetCountryMap, APIGetCountryTrend, APICountryIncr } from '../libs/api/api'
+import { APIGetCountryMap, APIGetCountryTrend, APICountryIncr, APIGetDeadIncrTrend, APIGetDeadIncrTrendBar } from '../libs/api/api'
 import { message, Row, Col, Radio } from 'antd'
 import CardList from '../components/cardList'
 import getTrendOpt from '../libs/charts/line'
+import getThemeRiverOpt from '../libs/charts/ThemeRiver'
+import getTrendBarOpt from '../libs/charts/bar'
 import moment from 'moment'
 
 const Root = styled.div`
@@ -65,13 +67,16 @@ const ChartArea = styled.div`
 `
 
 export default function index() {
-    const [mode, setMode] = useState<"map" | "line">("map")
+    const [mode, setMode] = useState<"map" | "line" | "dead">("map")
     const [DataMap, setDataMap] = useState<TCountryMap>([])
     const [DataIncurMap, setDataIncurMap] = useState<TCountryIncrMap>([])
     const [DataMapMode, setDataMapMode] = useState("acc")
+    const [DataDeadMode, setDataDeadMode] = useState("theme")
     const [DataTrend, setDataTrend] = useState<any[]>([])
     const [mapOpt, setMapOpt] = useState<EChartOption>({})
     const [trendOpt, setTrendOpt] = useState<EChartOption[]>([])
+    const [deadTrendOpt, setDeadTrendOpt] = useState<EChartOption>({})
+    const [deadTrendBarOpt, setDeadTrendBarOpt] = useState<EChartOption>({})
     const [selectedCountry, setSelectedCountry] = useState<string[]>([])
     const [range, setRange] = useState<{
         from: string, to: string
@@ -102,6 +107,18 @@ export default function index() {
             setTrendOpt([])
     }, [selectedCountry])
 
+    const getDeadTrendData = useCallback(() => {
+        if (DataDeadMode == "theme")
+            APIGetDeadIncrTrend()
+                .then(res => setDeadTrendOpt(getThemeRiverOpt(res.data)))
+                .catch(() => message.error("error"))
+        else
+            APIGetDeadIncrTrendBar()
+                .then(res => setDeadTrendBarOpt(getTrendBarOpt(res.data)))
+                .catch(() => message.error("error"))
+    }, [DataDeadMode])
+
+
 
 
     useEffect(() => {
@@ -117,7 +134,13 @@ export default function index() {
 
     useEffect(() => getTrendData(), [selectedCountry])
 
+    useEffect(() => getDeadTrendData(), [DataDeadMode])
 
+    const radioStyle = {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+      };
 
     return (
         <Root>
@@ -160,14 +183,32 @@ export default function index() {
                                 </FloatingArea>
 
                                 <ReactEcharts option={mapOpt} />
-                            </> : trendOpt.length > 0 ?
+                            </> : 
+                            mode == "line" ? 
+                            trendOpt.length > 0 ?
                                     trendOpt.map((e, idx) =>
                                         <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
                                     <div style={{textAlign: "center"}}>
                                     <img src="./placeholder0401.png" style={{
                                         maxWidth:"70%",
                                     }}/>
-                                    </div>
+                                    </div> : 
+                                    <>
+                                        <FloatingArea>
+                                            <Radio.Group onChange={e => {
+                                                console.log(e.target.value)
+                                                return setDataDeadMode(e.target.value)
+                                            }} value={DataDeadMode}>
+                                                <Radio style={radioStyle} value={"theme"}>河流图</Radio>
+                                                <Radio style={radioStyle} value={"bar"}>柱状图</Radio>
+                                            </Radio.Group>
+                                        </FloatingArea>
+                                        {
+                                            DataDeadMode == "theme" ?
+                                                <ReactEcharts option={deadTrendOpt} height={"60%"}/> :
+                                                <ReactEcharts option={deadTrendBarOpt} height={"50%"}/>
+                                        }
+                                    </>
                         }
                     </ChartArea>
                 </RightChart>

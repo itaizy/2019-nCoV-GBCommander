@@ -3,7 +3,7 @@ import { Button } from 'antd'
 import { useState } from 'react'
 
 export interface IProps {
-    onChangeMode: (s: "map" | "line") => void
+    onChangeMode: (s: "map" | "line" | "dead") => void
 }
 
 const Root = styled.div`
@@ -34,6 +34,13 @@ export default function TabBar({ onChangeMode }: IProps) {
                 }}
                 type={mode == "line" ? "primary" : "link"}
             > 趋势 </SButton>
+            <SButton
+                onClick={() => {
+                    setMode("dead")
+                    onChangeMode("dead")
+                }}
+                type={mode == "dead" ? "primary" : "link"}
+            > 死亡趋势 </SButton>
         </Root >
     )
 }

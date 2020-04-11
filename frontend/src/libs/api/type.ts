@@ -59,3 +59,16 @@ export type TCountryIncrMap = Array<{
     englishName: string;
     name: string;
 }>
+
+
+export type TDeadIncr = {
+    data: Array<Array<number | string>>;
+    legend: Array<string>;
+}
+
+export type TDeadIncrBar = {
+    [key: string]: {
+        dateList: Date[],
+        deadIncrPercent: number[]
+    };
+}

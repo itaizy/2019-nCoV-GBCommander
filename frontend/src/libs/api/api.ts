@@ -1,6 +1,6 @@
 
 import Axios from 'axios'
-import { TChinaCount, TCountryMap, TCountryIncrMap } from './type'
+import { TChinaCount, TCountryMap, TCountryIncrMap, TDeadIncr, TDeadIncrBar } from './type'
 import getConfig from 'next/config'
 const { publicRuntimeConfig } = getConfig()
 const { apiBase } = publicRuntimeConfig
@@ -10,6 +10,8 @@ const URL = {
     countryTend: `${apiBase}/country_tend`,
     countryList: `${apiBase}/country_list`,
     chinaCount: `${apiBase}/world_count`,
+    deadtrend: `${apiBase}/dead_river_flow`,
+    deadtrendbar: `${apiBase}/dead_bar`,
 }
 
 export const APIGetCountryMap = () => Axios.get<TCountryMap>(URL.countryMap)
@@ -20,4 +22,6 @@ export const APIGetCountryTrend = (payload: {
     to: string
 }) => Axios.post(URL.countryTend, payload)
 export const APIGetChinaCount = () => Axios.get<TChinaCount>(URL.chinaCount)
+export const APIGetDeadIncrTrend = () => Axios.get<TDeadIncr>(URL.deadtrend)
+export const APIGetDeadIncrTrendBar = () => Axios.get<TDeadIncrBar>(URL.deadtrendbar)
 
