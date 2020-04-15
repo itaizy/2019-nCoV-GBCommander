@@ -73,7 +73,7 @@ def country_incr_map():
 def country_tend():
     results = []
     recevie_data = request.get_json()
-    country_list = ['中国']
+    country_list = ['全球']
     countries = {}
     if recevie_data != None:
         if 'country_list' in recevie_data.keys():
@@ -92,8 +92,14 @@ def country_tend():
             db=MYSQL_DB,
             charset='utf8mb4'
         ) as conn:
-            sql = 'SELECT `name`, `englishName`, `date`, `confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr` FROM	ncov_data_jhu WHERE	`name` IN ({}) AND date >= "{}" AND date <= "{}";'
-            conn.execute(sql.format(",".join(['"' + j + '"' for j in country_list]), begin_time, end_time))
+            if country_list[0] == "全球":
+                sql = "SELECT '全球', 'global', `date`, SUM(`confirmedCount`), SUM(`confirmedIncr`), SUM(`curedCount`), SUM(`curedIncr`), " \
+                      "SUM(`deadCount`), SUM(`deadIncr`) FROM	ncov_data_jhu WHERE date >= '{}' AND date <= '{}' GROUP BY date;"
+                conn.execute(sql.format(begin_time, end_time))
+            else:
+                sql = 'SELECT `name`, `englishName`, `date`, `confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, ' \
+                      '`deadCount`, `deadIncr` FROM	ncov_data_jhu WHERE	`name` IN ({}) AND date >= "{}" AND date <= "{}";'
+                conn.execute(sql.format(",".join(['"' + j + '"' for j in country_list]), begin_time, end_time))
             results = conn.fetchall()
         for result in results:
             if result[0] not in countries.keys():
@@ -109,12 +115,12 @@ def country_tend():
                     "deadIncr": [],
                 }
             countries[result[0]]['dateList'].append(result[2].strftime("%Y-%m-%d"))
-            countries[result[0]]['confirmedCount'].append(result[3])
-            countries[result[0]]['confirmedIncr'].append(result[4])
-            countries[result[0]]['curedCount'].append(result[5])
-            countries[result[0]]['curedIncr'].append(result[6])
-            countries[result[0]]['deadCount'].append(result[7])
-            countries[result[0]]['deadIncr'].append(result[8])
+            countries[result[0]]['confirmedCount'].append(int(result[3]))
+            countries[result[0]]['confirmedIncr'].append(int(result[4]))
+            countries[result[0]]['curedCount'].append(int(result[5]))
+            countries[result[0]]['curedIncr'].append(int(result[6]))
+            countries[result[0]]['deadCount'].append(int(result[7]))
+            countries[result[0]]['deadIncr'].append(int(result[8]))
     return jsonify(countries)
 
 @app.route('/api/country_list')
