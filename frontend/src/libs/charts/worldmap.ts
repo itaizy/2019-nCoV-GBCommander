@@ -60,6 +60,19 @@ export const getMapIncrOpt: (data: TCountryIncrMap) => EChartOption = (data) => 
 }
 
 export const getMapOpt: (data: TCountryMap) => EChartOption = (data) => {
+    const rd = data.map(n => n.name)
+    Object.entries(nameMap).map(n => {
+        if (rd.indexOf(n[1]) == -1){
+            data.push({
+                'confirmedCount': 0,
+                'confirmedIncr': 0,
+                'curedCount': 0,
+                'deadCount': 0,
+                'englishName': n[0],
+                'name': n[1]
+            })
+        }
+    })
     const opt = ({
         visualMap: [{
             type: 'piecewise' as 'piecewise',

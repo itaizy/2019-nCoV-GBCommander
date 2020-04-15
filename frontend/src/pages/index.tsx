@@ -14,6 +14,7 @@ import getThemeRiverOpt from '../libs/charts/ThemeRiver'
 import getTrendBarOpt from '../libs/charts/bar'
 import moment from 'moment'
 
+
 const Root = styled.div`
     height:100vh;
     width: 100vw;
