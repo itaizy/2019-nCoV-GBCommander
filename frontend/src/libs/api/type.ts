@@ -72,3 +72,10 @@ export type TDeadIncrBar = {
         deadIncrPercent: number[]
     };
 }
+
+export type StatisticInfo = Array<{
+    countries: Array<string>;
+    link: string;
+    title: string;
+    updateTime: Date;
+}>

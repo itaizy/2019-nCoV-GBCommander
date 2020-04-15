@@ -48,7 +48,10 @@ export default function CardList() {
             }小时{
                     Math.round(duration.asMinutes() % 60)
 
-                }分钟前</span></Time>
+                }分钟前</span>
+                <a href='./ddata.html'>&nbsp;&nbsp;&nbsp;&nbsp;数据下载</a>
+            </Time>
+            
             {
                 data ?
                     <>
