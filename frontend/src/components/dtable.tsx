@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { TableRowSelection, ColumnsType } from 'antd/lib/table/interface'
 
 const columns: ColumnsType<StatisticInfo[0]> = [
-    { dataIndex: "title", title: "名称", key: "title" },
+    { dataIndex: "title", title: "名称", key: "title", align: 'center'},
     {
-        dataIndex: "link", title: "下载", key: "link",
+        dataIndex: "link", title: "下载", key: "link", align: 'center', 
         render: (text, record) => (
             <span>
               <Button type="primary" icon={<DownloadOutlined />} href={'http://ring.act.buaa.edu.cn/commander' + record.link}>
@@ -18,7 +18,7 @@ const columns: ColumnsType<StatisticInfo[0]> = [
           ),
     },
     {
-        dataIndex: "updateTime", title: "更新时间", key: "updateTime",
+        dataIndex: "updateTime", title: "更新时间", key: "updateTime", align: 'center', 
     },
 ]
 
@@ -44,7 +44,6 @@ export default function DDataTable({ data, select }:
                 style={{
                     height: "100%",
                     maxHeight: "100%",
-                    textAlign: 'center',
                     // overflow: "scroll"
                 }}
                 rowSelection={select}
@@ -57,6 +56,7 @@ export default function DDataTable({ data, select }:
                 pagination={false}
                 loading={data.length == 0}
                 bordered={true}
+                size='middle' 
             />
         </div>
     )
