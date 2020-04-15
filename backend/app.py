@@ -1,7 +1,9 @@
 import datetime
+import json
+import os
 
 import pymysql
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import cross_origin
 
 app = Flask(__name__)
@@ -320,6 +322,46 @@ def africa_confirm_flow():
             for result in results:
                 river_flow['data'].append([result[1].strftime("%Y-%m-%d"), int(result[2]), result[0]])
     return jsonify(river_flow)
+
+@app.route('/api/statistic/')
+@cross_origin()
+def statistic():
+    name = request.args.get('name')
+    return send_from_directory(os.path.join(os.path.dirname(os.path.abspath(__file__)), "statistic"), '{}.xlsx'.format(name), as_attachment=True)
+
+@app.route('/api/statistic_info')
+@cross_origin()
+def statistic_info():
+    statistic_info = []
+    with pymysql.connect(
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        user=MYSQL_USER,
+        passwd=MYSQL_PASSWORD,
+        db=MYSQL_DB,
+        charset='utf8mb4'
+    ) as conn:
+        sql = "SELECT `title`, `countries`, `link`, `updateTime` FROM statistic_info;"
+        conn.execute(sql)
+        results = conn.fetchall()
+        topic_info = []
+        for result in results:
+            if len(json.loads(result[1])) > 1:
+                topic_info.append({
+                    'title': result[0],
+                    'countries': json.loads(result[1]),
+                    'link': result[2],
+                    'updateTime': result[3].strftime("%Y-%m-%d %H:%M:%S"),
+                })
+            else:
+                statistic_info.append({
+                    'title': result[0],
+                    'countries': json.loads(result[1]),
+                    'link': result[2],
+                    'updateTime': result[3].strftime("%Y-%m-%d %H:%M:%S"),
+                })
+        topic_info.extend(statistic_info)
+    return jsonify(topic_info)
 
 if __name__ == '__main__':
     app.run()
