@@ -78,7 +78,7 @@ export default function index() {
     const [trendOpt, setTrendOpt] = useState<EChartOption[]>([])
     const [deadTrendOpt, setDeadTrendOpt] = useState<EChartOption>({})
     const [deadTrendBarOpt, setDeadTrendBarOpt] = useState<EChartOption>({})
-    const [selectedCountry, setSelectedCountry] = useState<string[]>([])
+    const [selectedCountry, setSelectedCountry] = useState<string[]>(["全球"])
     const [range, setRange] = useState<{
         from: string, to: string
     }>({
@@ -145,7 +145,7 @@ export default function index() {
         display: 'block',
         height: '30px',
         lineHeight: '30px',
-      };
+    };
 
     return (
         <Root>
@@ -161,7 +161,10 @@ export default function index() {
                         data={DataMap}
                         select={mode == "line" ? {
                             onSelect(e, _, rows) {
-                                setSelectedCountry(rows.map((e: any) => e.name))
+                                if (rows.length > 0)
+                                    setSelectedCountry(rows.filter((e: any) => !!e).map((e: any) => e.name))
+                                else
+                                    setSelectedCountry(["全球"])
                             },
                             hideDefaultSelections: true,
                             selectedRowKeys: selectedCountry
@@ -188,16 +191,12 @@ export default function index() {
                                 </FloatingArea>
 
                                 <ReactEcharts option={mapOpt} />
-                            </> : 
-                            mode == "line" ? 
-                            trendOpt.length > 0 ?
-                                    trendOpt.map((e, idx) =>
-                                        <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) :
-                                    <div style={{textAlign: "center"}}>
-                                    <img src="./placeholder0401.png" style={{
-                                        maxWidth:"70%",
-                                    }}/>
-                                    </div> : 
+                            </> :
+                                mode == "line" ?
+                                    trendOpt.length > 0 ?
+                                        trendOpt.map((e, idx) =>
+                                            <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) : null
+                                    :
                                     <>
                                         <FloatingArea>
                                             <Radio.Group onChange={e => {
@@ -211,8 +210,8 @@ export default function index() {
                                         </FloatingArea>
                                         {
                                             DataDeadMode == "bar" ?
-                                                <ReactEcharts option={deadTrendBarOpt}/> :
-                                                <ReactEcharts option={deadTrendOpt}/> 
+                                                <ReactEcharts option={deadTrendBarOpt} /> :
+                                                <ReactEcharts option={deadTrendOpt} />
                                         }
                                     </>
                         }
