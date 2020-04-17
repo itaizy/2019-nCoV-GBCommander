@@ -175,6 +175,7 @@ export default function index() {
                     <TabBarContainer>
                         <TabBar
                             onChangeMode={(e) => setMode(e)}
+                            onReclick={(e) => e === "line" && setSelectedCountry(["全球"])}
                         />
                     </TabBarContainer>
                     <ChartArea>

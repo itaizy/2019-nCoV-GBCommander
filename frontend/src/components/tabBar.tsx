@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 export interface IProps {
     onChangeMode: (s: "map" | "line" | "dead") => void
+    onReclick:(s: "map" | "line" | "dead")=>void
 }
 
 const Root = styled.div`
@@ -18,7 +19,7 @@ const SButton = styled(Button)`
     width: 50%;
 `
 
-export default function TabBar({ onChangeMode }: IProps) {
+export default function TabBar({ onChangeMode ,onReclick}: IProps) {
     const [mode, setMode] = useState("map")
     return (
         <Root>
@@ -29,6 +30,9 @@ export default function TabBar({ onChangeMode }: IProps) {
                 type={mode == "map" ? "primary" : "link"} > 地图 </SButton>
             <SButton
                 onClick={() => {
+                    if(mode=="line"){
+                        onReclick("line")
+                    }
                     setMode("line")
                     onChangeMode("line")
                 }}
