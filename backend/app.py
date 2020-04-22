@@ -109,6 +109,8 @@ def country_tend():
                     "dateList": [],
                     "confirmedCount": [],
                     "confirmedIncr": [],
+                    "currentConfirmedCount": [],
+                    "currentConfirmedIncr": [],
                     "curedCount": [],
                     "curedIncr": [],
                     "deadCount": [],
@@ -117,6 +119,8 @@ def country_tend():
             countries[result[0]]['dateList'].append(result[2].strftime("%Y-%m-%d"))
             countries[result[0]]['confirmedCount'].append(int(result[3]))
             countries[result[0]]['confirmedIncr'].append(int(result[4]))
+            countries[result[0]]['currentConfirmedCount'].append(int(result[3]) - int(result[5]) - int(result[7]))
+            countries[result[0]]['currentConfirmedIncr'].append(int(result[4]) - int(result[6]) - int(result[8]))
             countries[result[0]]['curedCount'].append(int(result[5]))
             countries[result[0]]['curedIncr'].append(int(result[6]))
             countries[result[0]]['deadCount'].append(int(result[7]))
