@@ -14,14 +14,14 @@ const getLineBase = (xData: any[], legend: any[]) => ({
     },
     toolbox: {
         left: 0,
-        bottom:"25%",
-        orient:"verticle",
+        bottom: "25%",
+        orient: "verticle",
         show: true,
         feature: {
             dataZoom: {
                 yAxisIndex: 'none'
             },
-            dataView: {readOnly: false},
+            dataView: { readOnly: false },
             magicType: {
                 type: ['line', 'bar', 'stack', 'tiled']
             },
@@ -41,13 +41,13 @@ const getLineBase = (xData: any[], legend: any[]) => ({
 
 })
 
-const getTrendOpt: (data: TCountryTrend) => EChartOption[] = (data) => {
+const getTrendOpt: (data: TCountryTrend, mode: "acc" | "cur") => EChartOption[] = (data, mode = "acc") => {
     const totalConfirmed =
         Object.entries(data).map(([k, v]) => ({
             name: k,
             type: 'bar',
             stack: '总量',
-            data: v.confirmedCount,
+            data: mode === "acc" ? v.confirmedCount : v.currentConfirmedCount,
             areaStyle: {},
 
         }))
@@ -67,7 +67,7 @@ const getTrendOpt: (data: TCountryTrend) => EChartOption[] = (data) => {
         [{
             ...getLineBase(xData, legend),
             title: {
-                text: '累计确诊'
+                text: mode === "acc" ? '累计确诊' : '现有确诊'
             },
             series: totalConfirmed
 

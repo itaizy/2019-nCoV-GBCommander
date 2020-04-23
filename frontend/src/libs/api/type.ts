@@ -40,6 +40,8 @@ export interface TCountryTrend {
 export interface trendobject {
     confirmedCount: number[];
     confirmedIncr: number[];
+    currentConfirmedCount: number[];
+    currentConfirmedIncr:number[];
     curedCount: number[];
     curedIncr: number[];
     dateList: string[];

@@ -79,6 +79,7 @@ export default function index() {
     const [deadTrendOpt, setDeadTrendOpt] = useState<EChartOption>({})
     const [deadTrendBarOpt, setDeadTrendBarOpt] = useState<EChartOption>({})
     const [selectedCountry, setSelectedCountry] = useState<string[]>(["全球"])
+    const [trendMode, setTrendMode] = useState<"acc" | "cur">("acc")
     const [range, setRange] = useState<{
         from: string, to: string
     }>({
@@ -99,14 +100,16 @@ export default function index() {
                 .catch(() => message.error("error"))
     }, [DataMapMode])
 
-    const getTrendData = useCallback(() => {
+    const getTrendData = useCallback((mode = "acc") => {
+        console.log(trendMode)
         if (selectedCountry.length > 0) APIGetCountryTrend({
             country_list: selectedCountry,
             ...range,
-        }).then(res => setTrendOpt(getTrendOpt(res.data)))
+        }).then(res => setTrendOpt(getTrendOpt(res.data, mode)))
         else
             setTrendOpt([])
     }, [selectedCountry])
+
 
     const getDeadTrendData = useCallback(() => {
         if (DataDeadMode == "theme")
@@ -137,7 +140,7 @@ export default function index() {
 
     useEffect(() => getCountryMap(), [DataMapMode])
 
-    useEffect(() => getTrendData(), [selectedCountry])
+    useEffect(() => getTrendData(trendMode), [selectedCountry, trendMode])
 
     useEffect(() => getDeadTrendData(), [DataDeadMode])
 
@@ -195,8 +198,19 @@ export default function index() {
                             </> :
                                 mode == "line" ?
                                     trendOpt.length > 0 ?
-                                        trendOpt.map((e, idx) =>
-                                            <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />) : null
+                                        <>
+                                            <FloatingArea>
+                                                <Radio.Group onChange={e => setTrendMode(e.target.value as any)} value={trendMode}>
+                                                    <Radio value={"acc"}>累计</Radio>
+                                                    <Radio value={"cur"}>现有</Radio>
+                                                </Radio.Group>
+                                            </FloatingArea>
+
+                                            {trendOpt.map((e, idx) =>
+                                                <ReactEcharts key={`rmap-${idx}`} option={e} height={"50%"} />)}
+
+
+                                        </> : null
                                     :
                                     <>
                                         <FloatingArea>
