@@ -126,7 +126,7 @@ export default function ddata() {
         if (selectedCountry.length > 0) APIGetCountryTrend({
             country_list: selectedCountry,
             ...range,
-        }).then(res => setTrendOpt(getTrendOpt(res.data)))
+        }).then(res => setTrendOpt(getTrendOpt(res.data,"acc")))
         else
             setTrendOpt([])
     }, [selectedCountry])
