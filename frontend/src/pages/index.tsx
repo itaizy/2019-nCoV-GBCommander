@@ -79,7 +79,7 @@ export default function index() {
     const [deadTrendOpt, setDeadTrendOpt] = useState<EChartOption>({})
     const [deadTrendBarOpt, setDeadTrendBarOpt] = useState<EChartOption>({})
     const [selectedCountry, setSelectedCountry] = useState<string[]>(["全球"])
-    const [trendMode, setTrendMode] = useState<"acc" | "cur">("acc")
+    const [trendMode, setTrendMode] = useState<"acc" | "cur"| "cured">("acc")
     const [range, setRange] = useState<{
         from: string, to: string
     }>({
@@ -203,6 +203,7 @@ export default function index() {
                                                 <Radio.Group onChange={e => setTrendMode(e.target.value as any)} value={trendMode}>
                                                     <Radio value={"acc"}>累计</Radio>
                                                     <Radio value={"cur"}>现有</Radio>
+                                                    <Radio value={"cured"}>治愈</Radio>
                                                 </Radio.Group>
                                             </FloatingArea>
 

@@ -47,7 +47,7 @@ const getTrendOpt: (data: TCountryTrend, mode: "acc" | "cur") => EChartOption[] 
             name: k,
             type: 'bar',
             stack: '总量',
-            data: mode === "acc" ? v.confirmedCount : v.currentConfirmedCount,
+            data: mode === "acc" ? v.confirmedCount : mode === "cur" ? v.currentConfirmedCount : v.curedCount,
             areaStyle: {},
 
         }))
@@ -67,7 +67,7 @@ const getTrendOpt: (data: TCountryTrend, mode: "acc" | "cur") => EChartOption[] 
         [{
             ...getLineBase(xData, legend),
             title: {
-                text: mode === "acc" ? '累计确诊' : '现有确诊'
+                text: mode === "acc" ? '累计确诊' : mode === "cur" ? '现有确诊' : "累计治愈"
             },
             series: totalConfirmed
 
@@ -77,9 +77,6 @@ const getTrendOpt: (data: TCountryTrend, mode: "acc" | "cur") => EChartOption[] 
                 text: '新增确诊'
             },
             series: deltaConfirmed
-
-
-
         }]
     return (opt
     )
