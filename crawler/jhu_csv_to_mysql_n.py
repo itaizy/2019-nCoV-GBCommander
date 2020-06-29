@@ -58,7 +58,7 @@ country_name_dict_p = {'China':'中国', 'US':'美国','Iran': '伊朗','Italy':
                        'Afghanistan': '阿富汗', 'Albania': '阿尔巴尼亚', 'Algeria': '阿尔及利亚', 'Andorra': '安道尔共和国', 'Angola': '安哥拉',
                        'Antigua and Barbuda': '安提瓜和巴布达', 'Argentina': '阿根廷', 'Armenia': '亚美尼亚', 'Australia': '澳大利亚',
                        'Austria': '奥地利', 'Azerbaijan': '阿塞拜疆', 'Bahamas': '巴哈马群岛', 'Bahrain': '巴林岛', 'Bangladesh': '孟加拉国',
-                       'Barbados': '巴巴多斯', 'Belarus': '白罗斯', 'Belgium': '比利时', 'Benin': '贝宁', 'Bhutan': '不丹', 'Bolivia': '玻利维亚',
+                       'Barbados': '巴巴多斯', 'Belarus': '白俄罗斯', 'Belgium': '比利时', 'Benin': '贝宁', 'Bhutan': '不丹', 'Bolivia': '玻利维亚',
                        'Bosnia and Herzegovina': '波斯尼亚和黑塞哥维那', 'Brazil': '巴西', 'Brunei': '文莱', 'Bulgaria': '保加利亚',
                        'Burkina Faso': '布基纳法索', 'Cabo Verde': '佛得角', 'Cambodia': '柬埔寨', 'Cameroon': '喀麦隆', 'Canada': '加拿大',
                        'Central African Republic': '中非共和国', 'Chad': '乍得', 'Chile': '智利', 'China': '中国', 'Colombia': '哥伦比亚',
@@ -197,5 +197,20 @@ for result in results:
     replace_SQL = "REPLACE INTO `ncov_data_statistic_jhu`(`name`, `date`, `confirm`, `heal`, `dead`, `confirmAdd`, `healAdd`, `deadAdd`) " \
                   "VALUES('global', '{}', {}, {}, {}, {}, {}, {})".format(result[0], result[1], result[3], result[5], result[2], result[4], result[6])
     cur.execute(replace_SQL)
+    con.commit()
+SQL = "SELECT MAX(`date`), SUM(confirmedCount), SUM(confirmedIncr), SUM(curedCount), SUM(curedIncr), SUM(deadCount), SUM(deadIncr) FROM (SELECT * FROM `ncov_data_jhu` WHERE `name` IN ('奥地利', '比利时', '保加利亚', '塞浦路斯', '克罗地亚', '捷克', '丹麦', '爱沙尼亚', '芬兰', '法国', '德国', '希腊', '匈牙利', '爱尔兰', '意大利', '拉脱维亚', '立陶宛', '卢森堡公国', '马耳他', '荷兰', '波兰', '葡萄牙', '罗马尼亚', '斯洛伐克', '斯洛文尼亚', '西班牙', '瑞典')) AS A WHERE `date` = (SELECT MAX(`date`) FROM ncov_data_jhu);"
+try:
+    cur.execute(SQL)
+    # con.commit()
+except Exception as e:
+    print(e)
+    print(SQL)
+    con.rollback()
+results = cur.fetchall()
+for result in results:
+    replace_SQL = "REPLACE INTO `ncov_data_jhu`(`name`, `englishName`, `countryShortCode`, `date`, `level`, `country`, " \
+                  "`confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr`) " \
+          "VALUES('欧盟', 'Europe Union', 'EU', '{}', 'country', '欧盟', {}, {}, {}, {}, {}, {})"
+    cur.execute(replace_SQL.format(result[0], result[1], result[2], result[3], result[4], result[5], result[6]))
     con.commit()
 con.close()
