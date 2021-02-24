@@ -7,12 +7,12 @@ import os
 import datetime
 
 import pymysql
-
+import pandas as pd
 
 var = os.system('cd ./COVID-19 && git pull')
 con = pymysql.connect(
-    # host='10.1.1.56',
-    host='localhost',
+    host='10.1.1.56',
+    # host='localhost',
     port=3306,
     user='root',
     password='123456',
@@ -44,6 +44,11 @@ def read_daily_count(file_path):
         row_name = next(reader)
         print(row_name)
 
+def getUSData(date_str):
+    date_str = datetime.datetime.strptime(date_str, "%m/%d/%y").strftime("%m-%d-%Y")
+    df = pd.read_csv("./COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/{}.csv".format(date_str), encoding="utf-8")
+    return int(df['Recovered'].sum())
+
 country_name_dict_p = {'China':'中国', 'US':'美国','Iran': '伊朗','Italy': '意大利','Germany': '德国','Korea, South': '韩国',
                         'Spain': '西班牙','France': '法国','Denmark': '丹麦','Norway': '挪威', 'Netherlands': '荷兰',
                         'United Kingdom': '英国', 'Switzerland': '瑞士', 'Whole world':'全世界', 'Czechia':'捷克', 'Canada':'加拿大',
@@ -69,7 +74,7 @@ country_name_dict_p = {'China':'中国', 'US':'美国','Iran': '伊朗','Italy':
                        'Georgia': '佐治亚', 'Germany': '德国', 'Ghana': '加纳', 'Greece': '希腊', 'Guatemala': '危地马拉', 'Guinea': '几内亚', 'Guyana': '圭亚那',
                        'Haiti': '海地', 'Holy See': '圣座', 'Honduras': '洪都拉斯', 'Hungary': '匈牙利', 'Iceland': '冰岛', 'India': '印度', 'Indonesia': '印度尼西亚',
                        'Iran': '伊朗', 'Iraq': '伊拉克', 'Ireland': '爱尔兰', 'Israel': '以色列', 'Italy': '意大利', 'Jamaica': '牙买加', 'Japan': '日本', 'Jordan': '约旦',
-                       'Kazakhstan': '哈萨克斯坦', 'Kenya': '肯尼亚', 'Korea, South': '韩国。', 'Kuwait': '科威特',
+                       'Kazakhstan': '哈萨克斯坦', 'Kenya': '肯尼亚', 'Kuwait': '科威特',
                        'Kyrgyzstan': '吉尔吉斯斯坦', 'Latvia': '拉脱维亚', 'Lebanon': '黎巴嫩', 'Liberia': '利比里亚', 'Liechtenstein': '列支敦斯登', 'Lithuania': '立陶宛',
                        'Luxembourg': '卢森堡公国', 'Madagascar': '马达加斯加岛', 'Malaysia': '马来西亚', 'Maldives': '马尔代夫', 'Malta': '马耳他', 'Mauritania': '毛里塔尼亚',
                        'Mauritius': '毛里求斯', 'Mexico': '墨西哥', 'Moldova': '摩尔多瓦', 'Monaco': '摩纳哥', 'Mongolia': '蒙古', 'Montenegro': '黑山共和国',
@@ -121,7 +126,7 @@ def read_daily_data(file_path):
                 else:
                     if result_dict['name'] in country_dict.keys():
                         if i > 3:
-                            dateStr = datetime.datetime.strptime(row_name_dict[i] + "20", "%m/%d/%Y").strftime("%m/%d/%Y")[:-2]
+                            dateStr = datetime.datetime.strptime(row_name_dict[i], "%m/%d/%y").strftime("%m/%d/%y")
                             country_dict[result_dict['name']][dateStr] += int(data[i])
                     else:
                         if i == 2:
@@ -129,18 +134,23 @@ def read_daily_data(file_path):
                         elif i == 3:
                             result_dict['longitude'] = float(data[i])
                         elif i > 3:
-                            dateStr = datetime.datetime.strptime(row_name_dict[i] + "20", "%m/%d/%Y").strftime("%m/%d/%Y")[:-2]
-                            result_dict[dateStr] = int(data[i])
+                            dateStr = datetime.datetime.strptime(row_name_dict[i], "%m/%d/%y").strftime("%m/%d/%y")
+                            if result_dict['name'] == "美国" and key == "cured" and datetime.datetime.strptime(row_name_dict[i], "%m/%d/%y") > datetime.datetime.strptime("2020-04-15", "%Y-%m-%d"):
+                                result_dict[dateStr] = getUSData(dateStr)
+                            else:
+                                result_dict[dateStr] = int(data[i])
             if result_dict['name'] not in country_dict.keys():
                 country_dict[result_dict['name']] = result_dict
     for place in country_dict.keys():
+        if place == '台湾':
+            continue
         for date in country_dict[place].keys():
             if re.match(r"\d+/\d+/\d+", date):
-                dateStamp = datetime.datetime.strptime(date+"20", "%m/%d/%Y").strftime("%Y-%m-%d")
+                dateStamp = datetime.datetime.strptime(date, "%m/%d/%y").strftime("%Y-%m-%d")
                 search_SQL = "SELECT * FROM `ncov_data_jhu` WHERE `name`='{}' AND `date`='{}' "
                 cur.execute(search_SQL.format(country_dict[place]['name'], dateStamp))
                 result = cur.fetchall()
-                lastDate = (datetime.datetime.strptime(date+"20", "%m/%d/%Y") - datetime.timedelta(days=1)).strftime("%m/%d/%Y")[:-2]
+                lastDate = (datetime.datetime.strptime(date, "%m/%d/%y") - datetime.timedelta(days=1)).strftime("%m/%d/%y")
                 last = country_dict[place][lastDate] if lastDate in country_dict[place].keys() else 0
                 if len(result) > 0:
                     SQL = "UPDATE `ncov_data_jhu` SET `{}Count`={}, `{}Incr`={} WHERE `name`='{}' AND `date`='{}'"
@@ -167,7 +177,7 @@ def read_daily_data(file_path):
                         print(SQL)
                         con.rollback()
                 last = country_dict[place][date]
-    con.commit()
+        con.commit()
 
 csv_list = []
 for i in os.walk('./COVID-19'):
@@ -184,33 +194,22 @@ for subpath, file_name in csv_list:
         print(csv_path)
         read_daily_data(csv_path)
 
-SQL = "SELECT MAX(`date`), SUM(confirmedCount), SUM(confirmedIncr), SUM(curedCount), SUM(curedIncr), SUM(deadCount), SUM(deadIncr) FROM `ncov_data_jhu` WHERE `date` = (SELECT MAX(`date`) FROM ncov_data_jhu);"
-try:
-    cur.execute(SQL)
-    # con.commit()
-except Exception as e:
-    print(e)
-    print(SQL)
-    con.rollback()
-results = cur.fetchall()
-for result in results:
-    replace_SQL = "REPLACE INTO `ncov_data_statistic_jhu`(`name`, `date`, `confirm`, `heal`, `dead`, `confirmAdd`, `healAdd`, `deadAdd`) " \
-                  "VALUES('global', '{}', {}, {}, {}, {}, {}, {})".format(result[0], result[1], result[3], result[5], result[2], result[4], result[6])
-    cur.execute(replace_SQL)
-    con.commit()
-SQL = "SELECT MAX(`date`), SUM(confirmedCount), SUM(confirmedIncr), SUM(curedCount), SUM(curedIncr), SUM(deadCount), SUM(deadIncr) FROM (SELECT * FROM `ncov_data_jhu` WHERE `name` IN ('奥地利', '比利时', '保加利亚', '塞浦路斯', '克罗地亚', '捷克', '丹麦', '爱沙尼亚', '芬兰', '法国', '德国', '希腊', '匈牙利', '爱尔兰', '意大利', '拉脱维亚', '立陶宛', '卢森堡公国', '马耳他', '荷兰', '波兰', '葡萄牙', '罗马尼亚', '斯洛伐克', '斯洛文尼亚', '西班牙', '瑞典')) AS A WHERE `date` = (SELECT MAX(`date`) FROM ncov_data_jhu);"
-try:
-    cur.execute(SQL)
-    # con.commit()
-except Exception as e:
-    print(e)
-    print(SQL)
-    con.rollback()
-results = cur.fetchall()
-for result in results:
-    replace_SQL = "REPLACE INTO `ncov_data_jhu`(`name`, `englishName`, `countryShortCode`, `date`, `level`, `country`, " \
-                  "`confirmedCount`, `confirmedIncr`, `curedCount`, `curedIncr`, `deadCount`, `deadIncr`) " \
-          "VALUES('欧盟', 'Europe Union', 'EU', '{}', 'country', '欧盟', {}, {}, {}, {}, {}, {})"
-    cur.execute(replace_SQL.format(result[0], result[1], result[2], result[3], result[4], result[5], result[6]))
-    con.commit()
+beginTime = datetime.datetime.strptime("2021-01-01", "%Y-%m-%d")
+while beginTime < (datetime.datetime.now() - datetime.timedelta(days=1)):
+    SQL = "SELECT MAX(`date`), SUM(confirmedCount), SUM(confirmedIncr), SUM(curedCount), SUM(curedIncr), SUM(deadCount), SUM(deadIncr) FROM `ncov_data_jhu` WHERE `date` = '{}' AND `name` != '中国';"
+    try:
+        cur.execute(SQL.format(beginTime.strftime("%Y-%m-%d")))
+        # con.commit()
+    except Exception as e:
+        print(e)
+        print(SQL)
+        con.rollback()
+    results = cur.fetchall()
+    for result in results:
+        replace_SQL = "REPLACE INTO `ncov_data_statistic_jhu`(`name`, `date`, `confirm`, `heal`, `dead`, `confirmAdd`, `healAdd`, `deadAdd`) " \
+                      "VALUES('global', '{}', {}, {}, {}, {}, {}, {})".format(result[0], result[1], result[3], result[5], result[2], result[4], result[6])
+        print(replace_SQL)
+        cur.execute(replace_SQL)
+        con.commit()
+    beginTime = beginTime + datetime.timedelta(days=1)
 con.close()
